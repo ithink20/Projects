@@ -22,7 +22,7 @@ def printBoard():
 	print " " + board[6] + "  | " + board[7] + "  | " + board[8] + " "
 	print "    |    |    "
 
-if __name__ == '__main__':
+def main():
 	printBoard()
 	while True:
 		#Player X turn:
@@ -82,3 +82,7 @@ if __name__ == '__main__':
 		if isFull == True:
 			print "Tie!"
 			break	
+	
+	
+if __name__ == '__main__':
+	main()
