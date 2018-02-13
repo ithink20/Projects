@@ -6,8 +6,8 @@ master.title("TIC TAC TOE")
 
 w = master.geometry("312x400")
 
-label1 = Label(text = "MODE :")
-label1.grid(row = 1, column = 0)
+l1 = Label(text = "MODE :")
+l1.grid(row = 1, column = 0)
 
 two_player = Button(master, text = "Two Player")
 two_player.grid(row = 1, column = 1, padx = 10, pady = 10)
