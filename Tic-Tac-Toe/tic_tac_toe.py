@@ -74,7 +74,7 @@ class Tic_Tac_Toe:
 			self.who_won(winner)
 			self.game_over = True
 		elif self.move_number == self.size**2 and self.board_full(self.board):
-			self.apply_to_each(lambda x: x.config(disabledforeground = "red"), self.buttons)
+			self.apply_to_each(lambda x: x.config(disabledforeground = "blue"), self.buttons)
 			self.game_over = True
 			tkMessageBox.showinfo("GAME TIE", "Ooh! seems like no-one lose!")
 
@@ -102,7 +102,7 @@ class Tic_Tac_Toe:
 
 		count.set("X: " + str(self.x_wins) + "\tO: " + str(self.o_wins))
 
-		self.apply_to_each(lambda x: x.config(disabledforeground = "red"), 
+		self.apply_to_each(lambda x: x.config(disabledforeground = "blue"), 
 								[self.buttons[s] for s in self.winning_s])
 
 		for b in self.buttons:
