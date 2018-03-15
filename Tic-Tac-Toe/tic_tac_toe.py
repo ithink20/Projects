@@ -2,6 +2,7 @@ from Tkinter import *
 import tkMessageBox
 import copy
 from operator import itemgetter
+from decimal import Decimal
 
 winning_combination = []
 
@@ -158,14 +159,14 @@ class Tic_Tac_Toe:
 
 	def computer_move(self):
 		player = "O"
-		a = -1000
-		b = 1000
+		a = Decimal('-Infinity')
+		b = Decimal('Infinity')
 
 		board_copy = copy.deepcopy(self.board)
-
 		best = -100
 		best_move = None
 		for i in xrange(self.size**2):
+			# print board_copy
 			if board_copy[i] == " ":
 				board_copy[i] = player
 				val = self.minmax(self.get_opponent(player), board_copy, a, b)
@@ -184,7 +185,7 @@ class Tic_Tac_Toe:
 	
 		board_copy = copy.deepcopy(board)
 		# Check for a win
-
+		# print board_copy
 		winner = self.game_won(board_copy)
 		if winner == "O":
 			return 1
