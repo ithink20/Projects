@@ -4,39 +4,42 @@ import copy
 from operator import itemgetter
 from decimal import Decimal
 
-winning_combination = []
-
-class Tic_Tac_Toe:
-	buttons = []
+class WinningSet:
 
 	def __init__(self, N):
-		global winning_combination
 		self.size = N
+		self.winning_combination = []
 		k = 0
 		for j in range(self.size):
 			temp = []
 			for i in range(self.size):
 				temp.append(i + k)
 			k += N
-			winning_combination.append(temp)
-		#print winning_combination
+			self.winning_combination.append(temp)
+		#print self.winning_combination
 
 		p = [[0 for i in range(self.size)] for j in range(self.size)]
 		for i in range(self.size):
 			for j in range(self.size):
-				p[i][j] = winning_combination[j][i]
+				p[i][j] = self.winning_combination[j][i]
 		l = [[0 for i in range(self.size)] for j in range(2)]
 		for i in range(self.size):
 			for j in range(self.size):
 				if i == j:
-					l[0][j] = winning_combination[i][j]
+					l[0][j] = self.winning_combination[i][j]
 		for i in range(self.size):
 			for j in range(self.size):
 				if (i + j) == self.size - 1:
-					l[1][i] = winning_combination[i][j]
-		winning_combination = winning_combination + p + l
+					l[1][i] = self.winning_combination[i][j]
+		self.winning_combination = self.winning_combination + p + l
+		#print self.winning_combination
 
+class TicTacToe:
 
+	def __init__(self, N):
+		self.buttons = []
+		self.size = N
+		self.wc = WinningSet(self.size)
 		self.board = [" "] * self.size**2
 		self.moves = [StringVar() for _ in xrange(self.size**2)]
 		self.x_wins = 0
@@ -74,7 +77,7 @@ class Tic_Tac_Toe:
 			self.who_won(winner)
 			self.game_over = True
 		elif self.move_number == self.size**2 and self.board_full(self.board):
-			self.apply_to_each(lambda x: x.config(disabledforeground = "blue"), self.buttons)
+			self.apply_to_each(lambda x: x.config(disabledforeground = "red"), self.buttons)
 			self.game_over = True
 			tkMessageBox.showinfo("GAME TIE", "Ooh! seems like no-one lose!")
 
@@ -102,7 +105,7 @@ class Tic_Tac_Toe:
 
 		count.set("X: " + str(self.x_wins) + "\tO: " + str(self.o_wins))
 
-		self.apply_to_each(lambda x: x.config(disabledforeground = "blue"), 
+		self.apply_to_each(lambda x: x.config(disabledforeground = "red"), 
 								[self.buttons[s] for s in self.winning_s])
 
 		for b in self.buttons:
@@ -128,7 +131,7 @@ class Tic_Tac_Toe:
 			self.moves[i].set(self.board[i])
 
 	def game_won(self, gameboard):
-		check = self.any_return([self.in_row(gameboard, c) for c in winning_combination])
+		check = self.any_return([self.in_row(gameboard, c) for c in self.wc.winning_combination])
 		if check:
 			return check
 		else:
@@ -166,7 +169,7 @@ class Tic_Tac_Toe:
 		best = -100
 		best_move = None
 		for i in xrange(self.size**2):
-			# print board_copy
+			#print board_copy
 			if board_copy[i] == " ":
 				board_copy[i] = player
 				val = self.minmax(self.get_opponent(player), board_copy, a, b)
@@ -185,7 +188,7 @@ class Tic_Tac_Toe:
 	
 		board_copy = copy.deepcopy(board)
 		# Check for a win
-		# print board_copy
+		#print board_copy
 		winner = self.game_won(board_copy)
 		if winner == "O":
 			return 1
@@ -221,7 +224,7 @@ master.title("TIC-TAC-TOE GAME")
 
 N = input("Enter Size: ")
 
-game = Tic_Tac_Toe(N)
+game = TicTacToe(N)
 
 # toshow the current scores
 
