@@ -39,7 +39,7 @@ class TicTacToe:
 	def __init__(self, N):
 		self.buttons = []
 		self.size = N
-		self.wc = WinningSet(self.size)
+		self.winning_combos = WinningSet(self.size)
 		self.board = [" "] * self.size**2
 		self.moves = [StringVar() for _ in xrange(self.size**2)]
 		self.x_wins = 0
@@ -131,7 +131,7 @@ class TicTacToe:
 			self.moves[i].set(self.board[i])
 
 	def game_won(self, gameboard):
-		check = self.any_return([self.in_row(gameboard, c) for c in self.wc.winning_combination])
+		check = self.any_return([self.in_row(gameboard, c) for c in self.winning_combos.winning_combination])
 		if check:
 			return check
 		else:
