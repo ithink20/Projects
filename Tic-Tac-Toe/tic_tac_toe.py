@@ -8,31 +8,31 @@ class WinningSet:
 
 	def __init__(self, N):
 		self.size = N
-		self.winning_combination = []
+		self.combos = []
 		k = 0
 		for j in range(self.size):
 			temp = []
 			for i in range(self.size):
 				temp.append(i + k)
 			k += N
-			self.winning_combination.append(temp)
-		#print self.winning_combination
+			self.combos.append(temp)
+		#print self.combos
 
 		p = [[0 for i in range(self.size)] for j in range(self.size)]
 		for i in range(self.size):
 			for j in range(self.size):
-				p[i][j] = self.winning_combination[j][i]
+				p[i][j] = self.combos[j][i]
 		l = [[0 for i in range(self.size)] for j in range(2)]
 		for i in range(self.size):
 			for j in range(self.size):
 				if i == j:
-					l[0][j] = self.winning_combination[i][j]
+					l[0][j] = self.combos[i][j]
 		for i in range(self.size):
 			for j in range(self.size):
 				if (i + j) == self.size - 1:
-					l[1][i] = self.winning_combination[i][j]
-		self.winning_combination = self.winning_combination + p + l
-		#print self.winning_combination
+					l[1][i] = self.combos[i][j]
+		self.combos = self.combos + p + l
+		#print self.combos
 
 class TicTacToe:
 
@@ -131,7 +131,7 @@ class TicTacToe:
 			self.moves[i].set(self.board[i])
 
 	def game_won(self, gameboard):
-		check = self.any_return([self.in_row(gameboard, c) for c in self.winning_combos.winning_combination])
+		check = self.any_return([self.in_row(gameboard, c) for c in self.winning_combos.combos])
 		if check:
 			return check
 		else:
