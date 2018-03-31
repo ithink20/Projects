@@ -3,40 +3,45 @@ import tkMessageBox
 import copy
 from operator import itemgetter
 from decimal import Decimal
+import argparse
 
 class WinningSet:
 
 	def __init__(self, N):
 		self.size = N
-		self.combos = []
+		self.winning_combination = []
 		k = 0
 		for j in range(self.size):
 			temp = []
 			for i in range(self.size):
 				temp.append(i + k)
 			k += N
-			self.combos.append(temp)
-		#print self.combos
+			self.winning_combination.append(temp)
+		#print self.winning_combination
 
 		p = [[0 for i in range(self.size)] for j in range(self.size)]
 		for i in range(self.size):
 			for j in range(self.size):
-				p[i][j] = self.combos[j][i]
+				p[i][j] = self.winning_combination[j][i]
 		l = [[0 for i in range(self.size)] for j in range(2)]
 		for i in range(self.size):
 			for j in range(self.size):
 				if i == j:
-					l[0][j] = self.combos[i][j]
+					l[0][j] = self.winning_combination[i][j]
 		for i in range(self.size):
 			for j in range(self.size):
 				if (i + j) == self.size - 1:
-					l[1][i] = self.combos[i][j]
-		self.combos = self.combos + p + l
-		#print self.combos
+					l[1][i] = self.winning_combination[i][j]
+		self.winning_combination = self.winning_combination + p + l
+		#print self.winning_combination
 
 class TicTacToe:
 
-	def __init__(self, N):
+	def __init__(self, N, pc, computer_on, info_text, info, count):
+		self.score = count
+		self.text = info_text
+		self.computer = pc
+		self.computer_mode = computer_on
 		self.buttons = []
 		self.size = N
 		self.winning_combos = WinningSet(self.size)
@@ -53,18 +58,18 @@ class TicTacToe:
 
 	# make_move
 	def make_move(self, move):
-		computer_on.config(state = 'disabled')
+		self.computer_mode.config(state = 'disabled')
 		self.move_number += 1
 		if self.current_player == "X":
 			self.board[move] = "X"
-			info_text.set("It is O's turn")
+			self.text.set("It is O's turn")
 			self.current_player = "O"
 		# If computer mode is ON, tell the computer to take it's turn
-			if computer.get() and self.move_number < 9:
+			if self.computer.get() and self.move_number < 9:
 				self.computer_move()
 		else:
 			self.board[move] = "O"
-			info_text.set("It is X's turn")
+			self.text.set("It is X's turn")
 			self.current_player = "X"
 
 		if self.game_over:
@@ -79,10 +84,10 @@ class TicTacToe:
 		elif self.move_number == self.size**2 and self.board_full(self.board):
 			self.apply_to_each(lambda x: x.config(disabledforeground = "red"), self.buttons)
 			self.game_over = True
-			tkMessageBox.showinfo("GAME TIE", "Ooh! seems like no-one lose!")
+			tkMessageBox.showinfo("GAME TIE", "Ooh! no-one lose!")
 
 		self.update_board()
-
+		
 	def apply_to_each(self, func, _list):
 		for i in _list:
 			func(i)
@@ -95,15 +100,15 @@ class TicTacToe:
 
 	def who_won(self, winner):
 		if winner == "X":
-			info_text.set("X wins!")
+			self.text.set("X wins!")
 			tkMessageBox.showinfo("WINNER X", "Congratulations! X has won the game.")
 			self.x_wins += 1
 		else:
-			info_text.set("O wins!")
+			self.text.set("O wins!")
 			tkMessageBox.showinfo("WINNER O", "Congratulations! O has won the game.")
 			self.o_wins += 1
 
-		count.set("X: " + str(self.x_wins) + "\tO: " + str(self.o_wins))
+		self.score.set("X: " + str(self.x_wins) + "\tO: " + str(self.o_wins))
 
 		self.apply_to_each(lambda x: x.config(disabledforeground = "red"), 
 								[self.buttons[s] for s in self.winning_s])
@@ -112,12 +117,12 @@ class TicTacToe:
 			b.config(state = "disabled")
 
 	def reset(self):
-		computer_on.config(state = 'normal')
+		self.computer_mode.config(state = 'normal')
 		self.current_player = "X"
 		self.move_number = 0
 		self.game_over = False
 
-		info_text.set("It is X's turn")
+		self.text.set("It is X's turn")
 
 		self.board = [" " for _ in self.board]
 		self.update_board()
@@ -131,7 +136,7 @@ class TicTacToe:
 			self.moves[i].set(self.board[i])
 
 	def game_won(self, gameboard):
-		check = self.any_return([self.in_row(gameboard, c) for c in self.winning_combos.combos])
+		check = self.any_return([self.in_row(gameboard, c) for c in self.winning_combos.winning_combination])
 		if check:
 			return check
 		else:
@@ -219,51 +224,58 @@ class TicTacToe:
 
 		return best_result
 
-master = Tk()
-master.title("TIC-TAC-TOE GAME")
+def main():
+	master = Tk()
+	master.title("TIC-TAC-TOE GAME")
 
-N = input("Enter Size: ")
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--size", type = int, help = "Size")
+	args = parser.parse_args()
+	N = args.size
 
-game = TicTacToe(N)
+	# Label used to give the user information
+	text = StringVar()
+	text.set("It is X's turn")
+	info = Label(master, textvariable = text)
+	info.grid(row = 2, column = 0, columnspan = 3)
 
-# toshow the current scores
+	#selecting modes
 
-count = StringVar()
-count.set("X : " + str(game.x_wins) + "\tO : " + str(game.o_wins))
-l = Label(master, textvariable = count)
-l.grid(row = 0, column = 1)
+	computer = IntVar()
+	computer_on = Checkbutton(master, text = "Computer", variable = computer)
+	computer_on.grid(row = 0, column = 2)
 
-#create Button
+	# toshow the current scores
 
-for i in xrange(N**2):
-	temp = Button(master, textvariable = game.moves[i], command = lambda s = i: game.make_move(s))
-	temp.grid(row = (i / N) + N, column = (i % N), sticky = NSEW)
-	game.buttons.append(temp)
+	count = StringVar()
+	l = Label(master, textvariable = count)
+	l.grid(row = 0, column = 1)
 
-#button for resetting the game
+	game = TicTacToe(N, computer, computer_on, text, info, count)
+	
+	count.set("X : " + str(game.x_wins) + "\tO : " + str(game.o_wins))
 
-reset_button = StringVar()
-reset_button.set("Reset")
-reset = Button(master, textvariable = reset_button, command = game.reset)
-reset.grid(row = 0, column = 0)
+	#button for resetting the game
 
-# Label used to give the user information
-info_text = StringVar()
-info_text.set("It is X's turn")
-info = Label(master, textvariable = info_text)
-info.grid(row = 2, column = 0, columnspan = 3)
+	reset_button = StringVar()
+	reset_button.set("Reset")
+	reset = Button(master, textvariable = reset_button, command = game.reset)
+	reset.grid(row = 0, column = 0)
 
+	#create Button
 
-#selecting modes
+	for i in xrange(N**2):
+		temp = Button(master, textvariable = game.moves[i], command = lambda s = i: game.make_move(s))
+		temp.grid(row = (i / N) + N, column = (i % N), sticky = NSEW)
+		game.buttons.append(temp)
 
-computer = IntVar()
-computer_on = Checkbutton(master, text = "Computer", variable = computer)
-computer_on.grid(row = 0, column = 2)
+	# Set the size of the rows and columns
 
-# Set the size of the rows and columns
+	for i in xrange(N**2):
+		master.columnconfigure(i % N, minsize = 100)
+		master.rowconfigure((i % N) + N, minsize = 100)
 
-for i in xrange(N**2):
-	master.columnconfigure(i % N, minsize = 100)
-	master.rowconfigure((i % N) + N, minsize = 100)
+	master.mainloop()
 
-master.mainloop()
+if __name__ == '__main__':
+	main()
