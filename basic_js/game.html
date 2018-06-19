@@ -1,0 +1,45 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<title> Guess Game</title>
+	</head>
+	<style>
+		@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,900);
+		body {
+			background-color: beige;
+		}
+		h2 {
+			position: relative;
+			text-align: center;
+			font-family: 'Source Sans Pro';
+			font-size: 4rem;
+			margin: 0;
+		}
+		p {
+			margin: 0;
+  			font-size: 1.3rem;
+			text-align: center;
+			top: 5%;
+			font-family: 'Source Sans Pro';
+		}
+		div {
+			text-align: center;
+			margin-top: 30px;
+			font-family: 'Source Sans Pro';
+		}
+	</style>
+	<script type="text/javascript" src = "game.js"></script>
+	<body>
+		<h2> The Guessing Game </h2>
+		<div class="form">
+      		<label for="guessField">Enter a guess: </label><input type="text" id="guessField" class="guessField">
+      		<input type="submit" value="Submit guess" class="guessSubmit">
+    	</div>
+
+    	<div class="resultParas">
+	      <p class="guesses"></p>
+	      <p class="lastResult"></p>
+	      <p class="lowOrHi"></p>
+	    </div>
+	</body>
+</html>
