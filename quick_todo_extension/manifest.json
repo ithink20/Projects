@@ -1,0 +1,10 @@
+{
+	"manifest_version" : 2,
+	"name" : "Quick TODO",
+	"version" : "1",
+	"browser_action" : {
+		"default_title" : "TODO",
+		"default_icon" : "todo.png",
+		"default_popup": "index.html"
+	}
+}
