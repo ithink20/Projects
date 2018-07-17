@@ -103,7 +103,7 @@ function Snake() {
             var pos = this.tail[i];
             var d = dist(this.x, this.y, pos.x, pos.y);
             if (d < 1) {
-                alert('Game Over');
+                gameOver();
                 this.total = 0;
                 this.score = 0;
                 this.tail = [];
@@ -123,4 +123,10 @@ function Snake() {
         }
         rect(this.x, this.y, w, w);
     }
+}
+
+function gameOver(score) {
+    noLoop();
+    textSize(40);
+    text("Game Over!", (width - 200) / 2, (height - 100) / 2);
 }
