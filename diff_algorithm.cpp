@@ -93,12 +93,13 @@ struct PatchEntry {
 };
 
 template<class T>
-void print_vector(std::vector<T> v, string message) {
-    cout << message << "\n";
-    for (int i = 0; i < v.size(); ++i) {
-        cout << "v[" << i  << "]=" << v[i] << "\n";
+void print_vector(std::vector<T> v, string message, string delim = "\n") {
+    if (message.size() > 0) {
+        cout << message << "\n";
     }
-    cout << "\n";
+    for (int i = 0; i < v.size(); ++i) {
+        cout << "v[" << i  << "]=" << v[i] << delim;
+    }
 }
 
 
@@ -133,26 +134,24 @@ int main() {
     }
     cout << "\nPatchEntry\n";
     for (int i = 0; i < patch.size(); ++i) {
-        ostringstream imploded;
-        auto s = patch[i].prepend_lines;
-        copy(s.begin(), s.end(), ostream_iterator<string>(imploded, ", "));
-        // cout << "PatchEntry[]=" << input_data[i] << "::" << patch[i].delete_old << "::" << imploded.str() << "\n";
+        cout << "patch[" << i << "]=" << (patch[i].delete_old ? "delete" : "keep") << "::";
+        print_vector(patch[i].prepend_lines, "", ", ");
+        cout << "\n";
+    }
+    cout << "Diff\n";
+    int current_line = -1;
+    for (int i = 0; i < patch.size(); ++i) {
         if (patch[i].delete_old == true) {
-            cout << "@@ " << i << " @@" << "\n";
-            cout << "-" << input_data[i] << "\n";
-        } else {
-            if (i < input_data.size()) {
-                auto s = patch[i].prepend_lines;
-                for (int i = 0; i < s.size(); ++i) {
-                    cout << "+" << s[i] << "\n";
-                }
-                cout << "+" << input_data[i] << "\n";
-            } else {
-                auto s = patch[i].prepend_lines;
-                for (int i = 0; i < s.size(); ++i) {
-                    cout << "+" << s[i] << "\n";
-                }
+            if (current_line != i) {
+                current_line = i;
+                cout << "@@ " << current_line + 1 << " @@" << "\n";
             }
+            cout << "-" << input_data[i] << "\n";
+            current_line += 1;
+        }
+        auto s = patch[i].prepend_lines;
+        for (int j = 0; j < s.size(); j++) {
+            cout << "+" << s[j] << "\n";
         }
     }
     return 0;
