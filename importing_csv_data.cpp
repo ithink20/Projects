@@ -15,6 +15,7 @@ vector<vector<string> > vector_object(const char *file_name) {
     vector<vector<string> > data;
     while (!fileName.eof()) {
        fileName >> d;
+        //getline(fileName, d);     //use:if a cell has whitespace included.
        stringstream ss(d);
        vector <string> myVec;
        string token;
