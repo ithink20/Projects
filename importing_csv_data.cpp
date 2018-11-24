@@ -13,7 +13,6 @@ vector<vector<string> > vector_object(const char *file_name) {
     string d;
     vector <string> myVec;
     vector<vector<string> > data;
-    int i = 0;
     while (!fileName.eof()) {
        fileName >> d;
        stringstream ss(d);
@@ -23,7 +22,6 @@ vector<vector<string> > vector_object(const char *file_name) {
             myVec.push_back(token);
        }
        data.push_back(myVec);
-       i += 1;
     }
     data.erase(data.end() - 1);
     return data;
