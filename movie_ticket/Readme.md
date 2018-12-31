@@ -25,3 +25,7 @@ Few of the assured advantages of the project are :
 * Make reservations by users (as per above selections)
 * Admin add/update movies, show timings
 * Admin can add new theatres and set show prices
+
+`
+For more detail, refer to the uploaded Project Report
+`
